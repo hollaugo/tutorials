@@ -4,7 +4,7 @@ from langgraph.prebuilt import create_react_agent
 import asyncio
 
 # Update the URL and port to match your server
-MCP_SERVER_URL = "http://localhost:8005/mcp"
+MCP_SERVER_URL = "http://localhost:8005/mcp-server/mcp"
 
 # Initialize the MultiServerMCPClient
 client = MultiServerMCPClient({
@@ -12,17 +12,19 @@ client = MultiServerMCPClient({
         "url": MCP_SERVER_URL,
         "transport": "streamable_http",
     }
-})
 
-async def ask_agent(question: str) -> str:
+})
+async def ask_agent(question: str, origin: str = "cli") -> str:
+    # If origin is slack, append formatting instructions to the question
+    if origin == "slack":
+        question = f"{question}\n\nPlease format your response for Slack using markdown formatting where appropriate (bold, italics, code blocks, etc.) and keep it concise and readable."
+    
     async with client.session("FinancialMCP") as session:
         tools = await load_mcp_tools(session)
-        # Fetch the Slack mrkdwn system prompt and prepend to user message
-        prompt_messages = await client.get_prompt(
-            "FinancialMCP",  # server_name
-            "slack_mrkdwn",  # prompt_name (define this in your server if not present)
-            arguments={"user_query": question}
-        )
+        # Use a simple user message as prompt
+        prompt_messages = [
+            {"role": "user", "content": question}
+        ]
         agent = create_react_agent("openai:gpt-4.1", tools)
         response = await agent.ainvoke({"messages": prompt_messages})
         # Collect all AI message contents

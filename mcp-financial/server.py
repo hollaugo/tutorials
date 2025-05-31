@@ -7,13 +7,12 @@ from dotenv import load_dotenv
 from fastmcp import FastMCP
 from fastmcp.prompts.prompt import Message, PromptMessage, TextContent
 from fastapi import FastAPI, Request
-from starlette.responses import JSONResponse
-from slack_bolt.async_app import AsyncApp
-from slack_bolt.adapter.fastapi.async_handler import AsyncSlackRequestHandler
+from starlette.responses import JSONResponse, PlainTextResponse
 import asyncio
 from client import ask_agent
 import tempfile
 from langchain_community.document_loaders import BSHTMLLoader
+import sys
 
 # Load environment variables
 load_dotenv()
@@ -22,17 +21,10 @@ load_dotenv()
 mcp = FastMCP("FinancialMCP")
 
 SEC_HEADERS = {
-    "User-Agent": "Prompt Circle Labs contact@promptcircle.com",
+    "User-Agent": "Prompt Circle Labs info@promptcircle.com",
     "Accept-Encoding": "gzip, deflate",
     "Host": "www.sec.gov"
 }
-
-# Initialize Slack Bolt AsyncApp
-slack_app = AsyncApp()
-slack_handler = AsyncSlackRequestHandler(slack_app)
-
-# Fetch bot user ID at startup
-bot_user_id = None
 
 # --- MCP Tools and Prompts ---
 @mcp.tool()
@@ -247,53 +239,19 @@ def slack_mrkdwn(user_query: str) -> str:
         f"User query: {user_query}"
     )
 
-# --- ASGI/FastAPI Integration ---
-mcp_app = mcp.http_app(path="/")
+# Custom MCP health route
+@mcp.custom_route("/health", methods=["GET"])
+async def health_check(request: Request) -> PlainTextResponse:
+    return PlainTextResponse("OK")
+
+# Create the ASGI app for MCP (ONE instance only)
+mcp_app = mcp.http_app(path='/mcp')
+
+# --- FASTAPI SETUP ---
 app = FastAPI(lifespan=mcp_app.lifespan)
-app.mount("/mcp", mcp_app)
+app.mount("/mcp-server", mcp_app)
 
-# Listen for messages in the specific channel
-@slack_app.event("app_mention")
-async def handle_app_mention_events(body, say, logger):
-    event = body.get("event", {})
-    channel = event.get("channel")
-    user = event.get("user")
-    text = event.get("text")
-    if channel == "C08TN8ZC2T0" and user and text:
-        # Remove the mention from the text
-        cleaned_text = text.replace(f"<@{bot_user_id}>", "").strip() if bot_user_id else text
-        # Add Slack mrkdwn system prompt
-        slack_mrkdwn_prompt = (
-            "You are a helpful financial assistant responding in a Slack channel. "
-            "All your responses must use Slack's mrkdwn formatting for clarity and readability. "
-            "- Use *bold* for key figures and headings.\n"
-            "- Use _italic_ for emphasis.\n"
-            "- Use bullet points or numbered lists for lists.\n"
-            "- Use code blocks (triple backticks) for tabular data or code.\n"
-            "- Use inline code (single backticks) for short code or ticker symbols.\n"
-            "- Use > for blockquotes when quoting text.\n"
-            "- Format links as <https://example.com|display text>.\n"
-            "- Never use HTML or non-Slack markdown.\n"
-            "- Keep your answers concise and easy to read in Slack."
-        )
-        # Prepend the prompt to the user message
-        full_query = f"{slack_mrkdwn_prompt}\n\nUser query: {cleaned_text}"
-        agent_response = await ask_agent(full_query)
-        await say(f"Agent says: {agent_response}")
-
-# Set bot_user_id at startup
-@slack_app.event("app_home_opened")
-async def set_bot_user_id(body, logger):
-    global bot_user_id
-    bot_user_id = body.get("authorizations", [{}])[0].get("user_id")
-    logger.info(f"Bot user ID set to: {bot_user_id}")
-
-# FastAPI route to handle Slack events
-@app.post("/slack/events")
-async def endpoint(req: Request):
-    return await slack_handler.handle(req)
-
-# Only needed for local dev/testing
+# --- RUN ---
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8005))
