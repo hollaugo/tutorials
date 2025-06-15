@@ -12,12 +12,12 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY pyproject.toml ./
-COPY uv.lock ./
+COPY pyproject.toml ./pyproject.toml
+COPY uv.lock ./uv.lock
 RUN pip install --upgrade pip && pip install uv && uv pip install --system --requirement <(uv pip compile pyproject.toml)
 
 # Copy project
-COPY agent2agent/ ./agent2agent/
+COPY app/ ./app/
 
 # Expose port
 EXPOSE 10000
