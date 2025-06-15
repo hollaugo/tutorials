@@ -1,0 +1,59 @@
+# ---- General ----
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+.env
+.env.local
+node_modules/
+dist/
+build/
+coverage/
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+debug.log
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# ---- Python ----
+.venv/
+venv/
+ENV/
+Pipfile.lock
+poetry.lock
+.mypy_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---- Node.js ----
+.npm/
+.nvm/
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# ---- macOS ----
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ---- VS Code ----
+.vscode/
+.history/
+
+# ---- JetBrains IDEs ----
+.idea/
+*.iml
+
+# ---- Misc ----
+*.bak
+*.orig
+*.rej
+*.sublime-workspace
+*.sublime-project

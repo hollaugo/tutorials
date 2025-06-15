@@ -1,0 +1,75 @@
+{
+    "display_information": {
+        "name": "Investment Research Analyst Agent",
+        "description": "A Slack app for financial research, stock analysis, and investment Q&A powered by the Investment Research Analyst Agent.",
+        "background_color": "#003366",
+        "long_description": "Interact with the Investment Research Analyst Agent to get stock summaries, SEC filings, analyst recommendations, and more directly in Slack. Designed for finance teams, analysts, and anyone interested in investment research."
+    },
+    "features": {
+        "app_home": {
+            "home_tab_enabled": true,
+            "messages_tab_enabled": true,
+            "messages_tab_read_only_enabled": false
+        },
+        "bot_user": {
+            "display_name": "Investment Analyst Agent",
+            "always_online": true
+        },
+        "assistant_view": {
+            "assistant_description": "Provides financial data, stock analysis, SEC filings, and investment research tools.",
+            "suggested_prompts": [
+                {
+                    "title": "Research Apple Stock",
+                    "message": "Get me Apple stock summary"
+                },
+                {
+                    "title": "Latest SEC Filings for Tesla",
+                    "message": "Show me the latest SEC filings for TSLA"
+                },
+                {
+                    "title": "Analyst Recommendations for Microsoft",
+                    "message": "Summarize analyst recommendations for MSFT."
+                },
+                {
+                    "title": "Find Sector for Google",
+                    "message": "What sector is GOOGL in?"
+                }
+            ]
+        }
+    },
+    "oauth_config": {
+        "scopes": {
+            "bot": [
+                "chat:write",
+                "channels:history",
+                "channels:join",
+                "canvases:write",
+                "canvases:read",
+                "app_mentions:read",
+                "assistant:write",
+                "channels:manage",
+                "im:history",
+                "reactions:read"
+            ]
+        }
+    },
+    "settings": {
+        "event_subscriptions": {
+            "request_url": "[ngrok or server url]/slack/events",
+            "bot_events": [
+                "app_mention",
+                "assistant_thread_context_changed",
+                "assistant_thread_started",
+                "message.im",
+                "reaction_added"
+            ]
+        },
+        "interactivity": {
+            "is_enabled": true,
+            "request_url": "[ngrok or deployed server url]/slack/events"
+        },
+        "org_deploy_enabled": false,
+        "socket_mode_enabled": false,
+        "token_rotation_enabled": false
+    }
+}

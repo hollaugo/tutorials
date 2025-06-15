@@ -1,0 +1,19 @@
+[project]
+name = "agent2agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "a2a-sdk>=0.2.8",
+    "click>=8.2.1",
+    "langchain>=0.3.25",
+    "langchain-community>=0.3.25",
+    "langchain-google-genai>=2.1.5",
+    "langchain-openai>=0.3.23",
+    "langgraph>=0.4.8",
+    "python-dotenv>=1.1.0",
+    "slack-bolt>=1.23.0",
+    "uvicorn>=0.34.3",
+    "yfinance>=0.2.63",
+]
