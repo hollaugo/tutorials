@@ -17,7 +17,7 @@ COPY uv.lock ./uv.lock
 RUN pip install --upgrade pip && pip install uv && uv pip install --system --editable .
 
 # Copy project
-COPY app/ ./app/
+COPY . .
 
 # Expose port
 EXPOSE 10000
@@ -26,4 +26,4 @@ EXPOSE 10000
 ENV PORT=10000
 
 # Start the server
-CMD ["uvicorn", "agent2agent.app.api_server:app", "--host", "0.0.0.0", "--port", "10000"] 
+CMD ["uvicorn", "app.api_server:app", "--host", "0.0.0.0", "--port", "10000"] 
