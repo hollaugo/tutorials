@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/
 # Install Python dependencies
 COPY pyproject.toml ./pyproject.toml
 COPY uv.lock ./uv.lock
-RUN pip install --upgrade pip && pip install uv && uv pip install --system
+RUN pip install --upgrade pip && pip install uv && uv pip install --system --editable .
 
 # Copy project
 COPY app/ ./app/
