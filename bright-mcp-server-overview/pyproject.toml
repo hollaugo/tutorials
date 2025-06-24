@@ -1,0 +1,18 @@
+[project]
+name = "bright-mcp-server-overview"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "aiohttp>=3.12.13",
+    "fastapi>=0.115.13",
+    "google-adk>=1.4.2",
+    "langchain-mcp-adapters>=0.1.7",
+    "langchain-openai>=0.3.24",
+    "langgraph>=0.4.8",
+    "mcp>=1.9.4",
+    "python-dotenv>=1.1.0",
+    "slack-bolt>=1.23.0",
+    "uvicorn>=0.34.3",
+]

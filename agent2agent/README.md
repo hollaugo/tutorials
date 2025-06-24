@@ -1,12 +1,13 @@
 # Investment Research Analyst Agent
 
-A production-ready Google A2A agent for investment research and financial analysis, implementing the A2A protocol for remote agent communication and Slack integration.
+A production-ready Google A2A agent for investment research and financial analysis, implementing the A2A protocol for remote agent communication and Slack integration. 
 
 ## Features
 - **LangGraph agent** for stock summaries, SEC filings, analyst recommendations, and more (see `app/agent.py`).
 - **FastAPI server** (`app/api_server.py`) exposes both the A2A agent API and Slack event endpoints.
 - **Slack integration** with Block Kit UI, metadata modals, and step-by-step agent reasoning (`app/slack_client.py`).
-- **Test clients**: `app/test_client.py` and `app/try_ask_agent.py` for local/CLI testing.
+- **Test clients**: `app/test_client.py` and `app/try_ask_agent.py` for local/CLI the testing
+.
 - **Slack app manifest**: `app/slack_app_manifest.json` for easy Slack app setup.
 
 ## Architecture
