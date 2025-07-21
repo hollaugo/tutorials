@@ -225,7 +225,7 @@ Ensure your Notion databases align with expected properties:
 
 **Slack bot not responding**
 - Confirm Socket Mode is enabled
-- Check all three Slack tokens are correct
+- Check Slack tokens are correct
 - Ensure bot is installed to workspace
 
 **Agent errors**
