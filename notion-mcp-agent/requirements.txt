@@ -1,0 +1,10 @@
+fastmcp>=0.2.0
+fastapi>=0.104.0
+uvicorn>=0.24.0
+python-dotenv>=1.0.0
+notion-client>=2.0.0
+langchain-mcp-adapters>=0.1.0
+langgraph>=0.2.0
+openai>=1.0.0
+slack-bolt>=1.18.0
+slack-sdk>=3.27.0

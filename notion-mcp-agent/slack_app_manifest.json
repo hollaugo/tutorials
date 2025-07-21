@@ -1,0 +1,58 @@
+{
+    "display_information": {
+        "name": "Notion MCP Agent",
+        "description": "An Agent for Notion MCP Server",
+        "background_color": "#000000",
+        "long_description": "An Agent for interacting with a Notion workspace including the ability to search entire workspace, get context of a page, database, add pages to a database, update pages to a database."
+    },
+    "features": {
+        "app_home": {
+            "home_tab_enabled": true,
+            "messages_tab_enabled": true,
+            "messages_tab_read_only_enabled": false
+        },
+        "bot_user": {
+            "display_name": "Notion MCP Agent",
+            "always_online": true
+        },
+        "assistant_view": {
+            "assistant_description": "Provides access to Notion MCP Server Utilities",
+            "suggested_prompts": []
+        }
+    },
+    "oauth_config": {
+        "scopes": {
+            "bot": [
+                "chat:write",
+                "channels:history",
+                "channels:join",
+                "canvases:write",
+                "canvases:read",
+                "app_mentions:read",
+                "assistant:write",
+                "channels:manage",
+                "im:history",
+                "reactions:read"
+            ]
+        }
+    },
+    "settings": {
+        "event_subscriptions": {
+            "request_url": "https://localhost:8080/slack/events",
+            "bot_events": [
+                "app_mention",
+                "assistant_thread_context_changed",
+                "assistant_thread_started",
+                "message.im",
+                "reaction_added"
+            ]
+        },
+        "interactivity": {
+            "is_enabled": true,
+            "request_url": "https://localhost:8080/slack/events"
+        },
+        "org_deploy_enabled": false,
+        "socket_mode_enabled": true,
+        "token_rotation_enabled": false
+    }
+}

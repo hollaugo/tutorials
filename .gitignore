@@ -57,3 +57,6 @@ yarn.lock
 *.rej
 *.sublime-workspace
 *.sublime-project
+
+.kiro/
+blog_post.md
