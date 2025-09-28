@@ -20,4 +20,4 @@ dependencies = [
 dev = "smithery.cli.dev:main"
 playground = "smithery.cli.playground:main"
 [tool.smithery] 
-server = "server:create_server"
+server = "financial_server.server:create_server"
