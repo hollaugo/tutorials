@@ -293,7 +293,7 @@ MIT License - see individual project LICENSE files for details.
 ### Platform-Specific Support
 - **Bright Data**: [brightdata.com/support](https://brightdata.com/support)
 - **Notion**: [developers.notion.com](https://developers.notion.com/)
-- **Fantasy Premier League**: [fantasy.premierleague.com/api](https://fantasy.premierleague.com/api)
+- **Fantasy Premier League**: [fpl.readthedocs.io](https://fpl.readthedocs.io/en/latest/)
 - **Slack**: [api.slack.com/support](https://api.slack.com/support)
 
 ---
