@@ -1,0 +1,32 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "NODE_OPTIONS=\"--require $(pwd)/scripts/polyfill-crypto.cjs\" mastra dev",
+    "build": "NODE_OPTIONS=\"--require $(pwd)/scripts/polyfill-crypto.cjs\" mastra build",
+    "start": "NODE_OPTIONS=\"--require $(pwd)/scripts/polyfill-crypto.cjs\" mastra start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^1.3.24",
+    "@mastra/core": "^0.16.3",
+    "@mastra/libsql": "^0.14.1",
+    "@mastra/loggers": "^0.10.11",
+    "@mastra/memory": "^0.15.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "mastra": "^0.12.3",
+    "typescript": "^5.9.2"
+  }
+}

@@ -10,7 +10,6 @@ This repository contains multiple agent implementations, each demonstrating diff
 |---------|-----------|--------------|----------|
 | [agent2agent](#agent2agent) | LangGraph + A2A Protocol | Remote agent communication, Slack integration | Investment research |
 | [mcp-financial](#mcp-financial) | FastMCP + FastAPI | ASGI integration, CLI client | Financial data analysis |
-| [zapier-mcps](#zapier-mcps) | OpenAI Agent SDK | Multi-agent handoffs, Zapier integration | Sales operations automation |
 | [bright-mcp-server-overview](#bright-mcp-server-overview) | Dual: LangGraph + ADK | Memory persistence, extended timeouts | Web scraping & research |
 | [fpl-deepagent](#fpl-deepagent) | FastMCP + React UI | Streamable HTTP, ChatGPT integration | Fantasy Premier League |
 | [notion-mcp-agent](#notion-mcp-agent) | LangGraph + MCP | Notion integration, database management | Knowledge management |
@@ -74,36 +73,6 @@ A financial data agent powered by FastMCP with ASGI integration, providing both 
 - Earnings analysis
 - Market research
 - Investment insights
-
-### zapier-mcps/
-**Multi-Agent Sales Operations System**
-
-A sophisticated multi-agent system using OpenAI's Agent SDK with Zapier MCP integration for sales automation.
-
-**Key Features:**
-- **Framework**: OpenAI Agent SDK
-- **Architecture**: Multi-agent with intelligent triage
-- **Integration**: Zapier MCP for workflow automation
-- **Agents**: Account Planning Agent, Scheduling Agent, Triage Agent
-- **Handoffs**: Automatic agent delegation based on task type
-
-**Technical Stack:**
-- OpenAI Agent SDK for agent orchestration
-- Zapier MCP for external service integration
-- Pydantic for data validation
-- Async agent execution with Runner
-
-**Agent Roles:**
-- **Triage Agent**: Determines optimal agent for task delegation
-- **Account Planning Agent**: Specializes in account analysis and planning
-- **Scheduling Agent**: Handles meeting scheduling via Google Calendar
-
-**Use Cases:**
-- Sales operations automation
-- Account planning and analysis
-- Meeting scheduling coordination
-- Workflow orchestration
-- Multi-agent task delegation
 
 ### bright-mcp-server-overview/
 **Bright Data MCP Research Agent**
@@ -349,12 +318,10 @@ Multiple projects demonstrate different MCP implementation patterns:
 - **FastMCP ASGI**: Direct FastAPI integration (mcp-financial, smithery-example)
 - **FastMCP Streamable HTTP**: Modern bidirectional communication (fpl-deepagent)
 - **Bright Data MCP**: External MCP server communication
-- **Zapier MCP**: Third-party service integration
 - **Notion MCP**: Database and knowledge management integration
 
 ### Agent Communication
 - **A2A Protocol**: Remote agent-to-agent communication (agent2agent)
-- **Multi-Agent Handoffs**: Intelligent task delegation (zapier-mcps)
 - **Streaming Communication**: Real-time agent interactions (deep-agents-stream)
 - **State Management**: Persistent conversation memory (bright-mcp-server-overview)
 
@@ -405,7 +372,6 @@ MIT License - see individual project LICENSE files for details.
 
 ### Platform-Specific Support
 - **Bright Data**: [brightdata.com/support](https://brightdata.com/support)
-- **Zapier**: [zapier.com/help](https://zapier.com/help)
 - **Notion**: [developers.notion.com](https://developers.notion.com/)
 - **Fantasy Premier League**: [fantasy.premierleague.com/api](https://fantasy.premierleague.com/api)
 - **Slack**: [api.slack.com/support](https://api.slack.com/support)
