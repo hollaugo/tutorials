@@ -13,9 +13,6 @@ This repository contains multiple agent implementations, each demonstrating diff
 | [bright-mcp-server-overview](#bright-mcp-server-overview) | Dual: LangGraph + ADK | Memory persistence, extended timeouts | Web scraping & research |
 | [fpl-deepagent](#fpl-deepagent) | FastMCP + React UI | Streamable HTTP, ChatGPT integration | Fantasy Premier League |
 | [notion-mcp-agent](#notion-mcp-agent) | LangGraph + MCP | Notion integration, database management | Knowledge management |
-| [deep-agent-test](#deep-agent-test) | LangGraph | React agent pattern, testing framework | Agent testing & development |
-| [deep-agents-stream](#deep-agents-stream) | Streaming agents | Real-time streaming, async processing | Streaming applications |
-| [deep-agents-ui](#deep-agents-ui) | Next.js + React | Modern UI framework, TypeScript | User interface development |
 | [mastra-overview](#mastra-overview) | Mastra framework | Multi-LLM orchestration | Framework exploration |
 | [smithery-example](#smithery-example) | Smithery + FastMCP | MCP playground, development tools | MCP development |
 
@@ -164,79 +161,6 @@ A sophisticated agent that integrates with Notion through MCP, providing intelli
 - Team collaboration workflows
 - Information retrieval and organization
 
-### deep-agent-test/
-**LangGraph React Agent Testing Framework**
-
-A comprehensive testing framework for LangGraph agents implementing the React agent pattern with proper testing infrastructure.
-
-**Key Features:**
-- **Framework**: LangGraph with React agent pattern
-- **Testing**: Comprehensive unit and integration tests
-- **Configuration**: Flexible agent configuration management
-- **Observability**: Built-in logging and monitoring
-- **Development Tools**: Makefile for common tasks
-
-**Technical Stack:**
-- LangGraph for agent implementation
-- pytest for testing framework
-- Makefile for build automation
-- Configuration management with environment variables
-
-**Use Cases:**
-- Agent development and testing
-- React pattern implementation
-- Integration testing for LangGraph agents
-- Agent configuration management
-- Development workflow automation
-
-### deep-agents-stream/
-**Streaming Agents Implementation**
-
-A demonstration of streaming agent capabilities with real-time processing and async communication patterns.
-
-**Key Features:**
-- **Streaming**: Real-time agent communication
-- **Async Processing**: Non-blocking agent execution
-- **Performance**: Optimized for high-throughput scenarios
-- **Scalability**: Designed for concurrent agent operations
-
-**Technical Stack:**
-- Python async/await patterns
-- Streaming protocols for real-time communication
-- Performance optimization techniques
-
-**Use Cases:**
-- Real-time data processing
-- High-frequency agent interactions
-- Streaming applications
-- Performance-critical agent systems
-
-### deep-agents-ui/
-**Modern Agent UI Framework**
-
-A comprehensive Next.js and React-based user interface framework for agent applications with modern development practices.
-
-**Key Features:**
-- **Framework**: Next.js 14 + React 18 + TypeScript
-- **UI Components**: Modern, accessible component library
-- **Authentication**: Built-in auth provider integration
-- **Styling**: SCSS with modern CSS practices
-- **Development**: Hot reloading and development tools
-
-**Technical Stack:**
-- Next.js for React framework
-- TypeScript for type safety
-- SCSS for styling
-- Component-based architecture
-- Modern development tooling
-
-**Use Cases:**
-- Agent application frontends
-- User interface development
-- Modern web applications
-- Component library development
-- Full-stack agent applications
-
 ### mastra-overview/
 **Mastra Framework Exploration**
 
@@ -322,20 +246,16 @@ Multiple projects demonstrate different MCP implementation patterns:
 
 ### Agent Communication
 - **A2A Protocol**: Remote agent-to-agent communication (agent2agent)
-- **Streaming Communication**: Real-time agent interactions (deep-agents-stream)
 - **State Management**: Persistent conversation memory (bright-mcp-server-overview)
 
 ### UI Integration Patterns
 - **React + ChatGPT**: OpenAI Apps SDK integration (fpl-deepagent)
-- **Next.js Frontend**: Modern web application frameworks (deep-agents-ui)
 - **Slack Bots**: Event-driven chat interfaces (multiple projects)
 - **CLI Clients**: Command-line agent interaction
 
 ### Development & Testing
-- **React Agent Pattern**: LangGraph testing framework (deep-agent-test)
 - **MCP Playground**: Development and testing environment (smithery-example)
 - **Multi-LLM Orchestration**: Framework exploration (mastra-overview)
-- **Streaming Architecture**: Real-time processing patterns (deep-agents-stream)
 
 ### Integration Patterns
 - **Container Deployment**: Docker and cloud-ready
