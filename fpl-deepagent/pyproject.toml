@@ -1,0 +1,27 @@
+[project]
+name = "fpl-deepagent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "aiohttp>=3.12.15",
+    "backoff>=2.2.1",
+    "cachetools>=6.1.0",
+    "deepagents>=0.0.3",
+    "faiss-cpu>=1.11.0.post1",
+    "fastapi>=0.116.1",
+    "fastmcp>=2.11.3",
+    "fpl>=0.6.35",
+    "jq>=1.10.0",
+    "langchain>=0.3.27",
+    "langchain-community>=0.3.27",
+    "langchain-openai>=0.3.29",
+    "langgraph>=0.6.5",
+    "mcp>=1.16.0",
+    "pydantic>=2.11.7",
+    "python-dotenv>=1.1.1",
+    "starlette>=0.41.0",
+    "tavily-python>=0.7.10",
+    "uvicorn>=0.35.0",
+]

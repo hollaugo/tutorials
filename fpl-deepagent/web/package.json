@@ -1,0 +1,23 @@
+{
+  "name": "fpl-mcp-ui",
+  "version": "1.0.0",
+  "description": "FPL MCP Server UI Components",
+  "scripts": {
+    "build": "esbuild src/PlayerListComponent.tsx --bundle --format=esm --outfile=dist/player-list.js && esbuild src/PlayerDetailComponent.tsx --bundle --format=esm --outfile=dist/player-detail.js && esbuild src/PlayerComparisonComponent.tsx --bundle --format=esm --outfile=dist/player-comparison.js",
+    "build:list": "esbuild src/PlayerListComponent.tsx --bundle --format=esm --outfile=dist/player-list.js",
+    "build:detail": "esbuild src/PlayerDetailComponent.tsx --bundle --format=esm --outfile=dist/player-detail.js",
+    "build:comparison": "esbuild src/PlayerComparisonComponent.tsx --bundle --format=esm --outfile=dist/player-comparison.js",
+    "watch": "esbuild src/PlayerListComponent.tsx --bundle --format=esm --outfile=dist/player-list.js --watch"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "esbuild": "^0.19.0",
+    "typescript": "^5.0.0"
+  }
+}
+
