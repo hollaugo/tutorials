@@ -1,0 +1,43 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Found 3 pizza places near Times Square"
+    }
+  ],
+  "structuredContent": {
+    "location": "Times Square",
+    "places": [
+      {
+        "id": "1",
+        "name": "Joe's Pizza",
+        "rating": 4.5,
+        "coords": [-73.985428, 40.748817],
+        "description": "Classic NY slice"
+      },
+      {
+        "id": "2",
+        "name": "Lombardi's",
+        "rating": 4.7,
+        "coords": [-73.995780, 40.721640],
+        "description": "First pizzeria in America"
+      },
+      {
+        "id": "3",
+        "name": "Prince Street Pizza",
+        "rating": 4.6,
+        "coords": [-73.994890, 40.722531],
+        "description": "Famous pepperoni square"
+      }
+    ]
+  },
+  "_meta": {
+    "openai/outputTemplate": "ui://widget/pizza-map.html",
+    "openai/toolInvocation/invoking": "Searching for pizza...",
+    "openai/toolInvocation/invoked": "Found pizza places",
+    "mapSettings": {
+      "center": [-73.985428, 40.748817],
+      "zoom": 13
+    }
+  }
+}

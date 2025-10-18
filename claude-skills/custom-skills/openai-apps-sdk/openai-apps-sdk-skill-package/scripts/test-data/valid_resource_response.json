@@ -1,0 +1,18 @@
+{
+  "contents": [
+    {
+      "uri": "ui://widget/pizza-map.html",
+      "mimeType": "text/html+skybridge",
+      "text": "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n</head>\n<body>\n  <div id=\"app-root\"></div>\n  <link rel=\"stylesheet\" href=\"https://cdn.example.com/pizza-map.css\">\n  <script type=\"module\" src=\"https://cdn.example.com/pizza-map.js\"></script>\n</body>\n</html>",
+      "_meta": {
+        "openai/widgetDescription": "Interactive map showing pizza locations with ratings and reviews",
+        "openai/widgetPrefersBorder": true,
+        "openai/widgetCSP": {
+          "connect_domains": ["https://api.mapbox.com"],
+          "resource_domains": ["https://cdn.example.com"]
+        },
+        "openai/widgetDomain": "https://chatgpt.com"
+      }
+    }
+  ]
+}

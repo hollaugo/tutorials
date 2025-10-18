@@ -13,6 +13,8 @@ This repository contains multiple agent implementations, each demonstrating diff
 | [bright-mcp-server-overview](#bright-mcp-server-overview) | Dual: LangGraph + ADK | Memory persistence, extended timeouts | Web scraping & research |
 | [fpl-deepagent](#fpl-deepagent) | FastMCP + React UI | Streamable HTTP, ChatGPT integration | Fantasy Premier League |
 | [notion-mcp-agent](#notion-mcp-agent) | LangGraph + MCP | Notion integration, database management | Knowledge management |
+| [claude-skills](#claude-skills) | Claude Skills API | Document generation, custom skills | PowerPoint, Excel, Word creation |
+| [openai-chatkit-starter-app](#openai-chatkit-starter-app) | Next.js + ChatKit | Agent Builder integration, web component | ChatKit UI development |
 | [mastra-overview](#mastra-overview) | Mastra framework | Multi-LLM orchestration | Framework exploration |
 | [smithery-example](#smithery-example) | Smithery + FastMCP | MCP playground, development tools | MCP development |
 
@@ -161,6 +163,73 @@ A sophisticated agent that integrates with Notion through MCP, providing intelli
 - Team collaboration workflows
 - Information retrieval and organization
 
+### claude-skills/
+**Claude Skills API Implementation**
+
+A comprehensive implementation of Claude's Skills API for automated document generation and custom skill creation.
+
+**Key Features:**
+- **Framework**: Claude Skills API with streaming support
+- **Document Generation**: PowerPoint, Excel, Word, and PDF creation
+- **Custom Skills**: Upload and manage custom skills (8MB limit)
+- **File Management**: List, download, and delete generated files
+- **Multi-Skill Workflows**: Combine multiple skills in single requests
+
+**Technical Stack:**
+- Claude Skills API with beta features
+- Code execution environment (2025-08-25)
+- Files API (2025-04-14)
+- Streaming responses for real-time progress
+- Python SDK with uv package manager
+
+**Utilities:**
+- `list-skills.py` - List all available skills
+- `create-skill.py` - Upload custom skills from directories
+- `use-skill.py` - Generate documents with single skills
+- `multi-skill-demo.py` - Complex workflows with multiple skills
+- `list-files.py` / `download-file.py` / `delete-file.py` - File management
+
+**Use Cases:**
+- Automated PowerPoint presentation generation
+- Excel spreadsheet creation and data analysis
+- Word document generation
+- PDF report creation
+- Custom skill development and deployment
+- Multi-format document workflows
+
+### openai-chatkit-starter-app/
+**ChatKit Web Component Starter**
+
+A minimal Next.js starter template for building ChatKit applications with OpenAI's Agent Builder workflows.
+
+**Key Features:**
+- **Framework**: Next.js with ChatKit web component
+- **Integration**: OpenAI Agent Builder workflows
+- **Customization**: Configurable themes, prompts, and UI
+- **Session Management**: Ready-to-use session endpoint
+- **Deployment**: Domain allowlist verification support
+
+**Technical Stack:**
+- Next.js for application framework
+- OpenAI ChatKit web component (`<openai-chatkit>`)
+- OpenAI API integration
+- TypeScript for type safety
+- Configurable theming system
+
+**Key Components:**
+- Session creation endpoint (`/api/create-session`)
+- ChatKit panel with event handlers
+- Theme and color scheme controls
+- Starter prompts configuration
+- Error overlay for debugging
+
+**Use Cases:**
+- ChatKit application prototyping
+- Agent Builder workflow integration
+- Custom ChatKit UI development
+- OpenAI workflow testing
+- Production ChatKit deployments
+
 ### mastra-overview/
 **Mastra Framework Exploration**
 
@@ -250,12 +319,19 @@ Multiple projects demonstrate different MCP implementation patterns:
 
 ### UI Integration Patterns
 - **React + ChatGPT**: OpenAI Apps SDK integration (fpl-deepagent)
+- **Next.js + ChatKit**: Agent Builder workflow integration (openai-chatkit-starter-app)
 - **Slack Bots**: Event-driven chat interfaces (multiple projects)
 - **CLI Clients**: Command-line agent interaction
+
+### Document Generation
+- **Claude Skills API**: Automated document creation with streaming (claude-skills)
+- **Multi-Format Support**: PowerPoint, Excel, Word, PDF generation
+- **Custom Skills**: Uploadable skill packages for specialized tasks
 
 ### Development & Testing
 - **MCP Playground**: Development and testing environment (smithery-example)
 - **Multi-LLM Orchestration**: Framework exploration (mastra-overview)
+- **Agent Builder**: OpenAI workflow development (openai-chatkit-starter-app)
 
 ### Integration Patterns
 - **Container Deployment**: Docker and cloud-ready
@@ -284,6 +360,10 @@ MIT License - see individual project LICENSE files for details.
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
 - [OpenAI Agent SDK](https://github.com/openai/agent-sdk)
 - [OpenAI Apps SDK](https://developers.openai.com/apps-sdk/)
+- [OpenAI ChatKit](http://openai.github.io/chatkit-js/)
+- [OpenAI Agent Builder](https://platform.openai.com/agent-builder)
+- [Claude Skills API](https://docs.claude.com/en/api/skills-guide)
+- [Anthropic Console](https://console.anthropic.com/)
 - [Google ADK](https://developers.google.com/ai/adk)
 - [FastMCP](https://github.com/pydantic/fastmcp)
 - [Mastra Framework](https://mastra.ai/)
