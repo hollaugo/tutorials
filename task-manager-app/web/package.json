@@ -1,0 +1,24 @@
+{
+  "name": "task-manager-widgets",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "npm run build:board && npm run build:detail && npm run build:create",
+    "build:board": "esbuild src/task-board.tsx --bundle --minify --format=esm --outfile=dist/task-board.js",
+    "build:detail": "esbuild src/task-detail.tsx --bundle --minify --format=esm --outfile=dist/task-detail.js",
+    "build:create": "esbuild src/task-create.tsx --bundle --minify --format=esm --outfile=dist/task-create.js"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.3"
+  }
+}
+
+

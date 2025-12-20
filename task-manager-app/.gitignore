@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+web/node_modules/
+web/dist/
+.env
+supabase/.temp/
+supabase/.branches/
+
+

@@ -1,0 +1,30 @@
+{
+  "display_information": {
+    "name": "Task Manager MCP",
+    "description": "Task Manager + notifications (MCP server)",
+    "background_color": "#000000",
+    "long_description": "A tutorial Slack app used to test the Task Manager MCP server notification tools. The MCP server uses Slack Web API methods chat.postMessage and chat.scheduleMessage."
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "Task Manager",
+      "always_online": true
+    }
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": [
+        "chat:write",
+        "channels:join",
+        "chat:write.public"
+      ]
+    }
+  },
+  "settings": {
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false,
+    "token_rotation_enabled": false
+  }
+}
+
+
