@@ -19,10 +19,14 @@ from dotenv import load_dotenv
 import mcp.types as types
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
+from mcp.server.auth.settings import AuthSettings, ClientRegistrationOptions
+from mcp.server.auth.middleware.auth_context import get_access_token
+from starlette.responses import RedirectResponse, JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from mcp_server.db.pool import PgPool
 from mcp_server.state import get_user_subject
+from mcp_server.oauth_provider import Auth0BackedOAuthProvider
 from mcp_server.tools.notifications import (
     cancel_notification,
     create_notification_intent,
@@ -199,6 +203,66 @@ def _resource_meta(widget: TaskWidget) -> Dict[str, Any]:
 bind_host = os.environ.get("TASK_MANAGER_HOST") or os.environ.get("FASTMCP_HOST") or "127.0.0.1"
 bind_port = int(os.environ.get("TASK_MANAGER_PORT") or os.environ.get("FASTMCP_PORT") or "8000")
 
+# OAuth (Auth0-backed) for multi-user mode
+require_auth = (os.environ.get("TASK_MANAGER_REQUIRE_AUTH") or "").strip().lower() in ("1", "true", "yes", "y", "on")
+oauth_mode = (os.environ.get("TASK_MANAGER_OAUTH_MODE") or "auth0").strip().lower()
+
+public_base_url = os.environ.get("TASK_MANAGER_PUBLIC_URL")
+if public_base_url:
+    public_base_url = public_base_url.strip().rstrip("/")
+
+auth0_domain = os.environ.get("AUTH0_DOMAIN")
+# Be forgiving with env var naming; tutorial users often mistype these.
+auth0_client_id = (
+    os.environ.get("AUTH0_CLIENT_ID")
+    or os.environ.get("AUTH0_CLIENTID")
+    or os.environ.get("AUTHO_CLIENT_ID")
+    or os.environ.get("AUTHO_CLIENTID")
+)
+auth0_client_secret = (
+    os.environ.get("AUTH0_CLIENT_SECRET")
+    or os.environ.get("AUTH0_CLIENTSECRET")
+    or os.environ.get("AUTHO_CLIENT_SECRET")
+    or os.environ.get("AUTHO_CLIENTSECRET")
+)
+
+auth_settings: AuthSettings | None = None
+auth_server_provider = None
+token_verifier = None
+
+if require_auth:
+    if not public_base_url:
+        raise RuntimeError("TASK_MANAGER_REQUIRE_AUTH=1 requires TASK_MANAGER_PUBLIC_URL=https://<your-ngrok-domain>")
+
+    # This is the OAuth authorization server URL that issues tokens for this MCP server.
+    issuer_url = public_base_url + "/"
+
+    if oauth_mode == "auth0":
+        if not auth0_domain or not auth0_client_id or not auth0_client_secret:
+            raise RuntimeError("OAuth mode auth0 requires AUTH0_DOMAIN, AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET.")
+
+        auth_settings = AuthSettings(
+            issuer_url=issuer_url,
+            # The protected resource is the Streamable HTTP endpoint mounted at /mcp.
+            # Setting this correctly avoids clients probing /.well-known/oauth-protected-resource/mcp and getting 404.
+            resource_server_url=public_base_url.rstrip("/") + "/mcp",
+            client_registration_options=ClientRegistrationOptions(
+                enabled=True,
+                # Keep scopes simple for now; you can tighten these later.
+                default_scopes=["tool:tasks", "tool:notifications"],
+                valid_scopes=["tool:tasks", "tool:notifications"],
+            ),
+        )
+        auth_server_provider = Auth0BackedOAuthProvider(
+            auth0_domain=auth0_domain,
+            auth0_client_id=auth0_client_id,
+            auth0_client_secret=auth0_client_secret,
+            public_base_url=public_base_url,
+            database_url=os.environ.get("DATABASE_URL"),
+        )
+    else:
+        raise RuntimeError(f"Unknown TASK_MANAGER_OAUTH_MODE: {oauth_mode}")
+
 # Transport security / Host header validation:
 # - By default, FastMCP enables DNS rebinding protection for localhost binds and will reject
 #   unknown Host headers (common when using ngrok).
@@ -236,7 +300,127 @@ mcp = FastMCP(
     streamable_http_path="/mcp",
     stateless_http=True,
     transport_security=transport_security,
+    auth=auth_settings,
+    auth_server_provider=auth_server_provider,
+    token_verifier=token_verifier,
 )
+
+
+@mcp.custom_route("/", methods=["GET"], include_in_schema=False)
+async def _root(request):
+    # Some OAuth clients probe "/" as a liveness check.
+    return JSONResponse({"status": "ok", "service": "task-manager-app"}, status_code=200)
+
+
+@mcp.custom_route("/.well-known/openid-configuration", methods=["GET"], include_in_schema=False)
+async def _oidc_discovery(request):
+    """
+    Some clients probe for OIDC discovery even when RFC 8414 OAuth metadata exists.
+    We expose a minimal OIDC discovery document that mirrors our OAuth endpoints.
+
+    Note: this server issues opaque access tokens (not JWTs), so jwks_uri is omitted.
+    """
+    if not require_auth or not public_base_url:
+        return JSONResponse({"error": "auth_not_configured"}, status_code=404)
+
+    issuer = public_base_url.rstrip("/") + "/"
+    return JSONResponse(
+        {
+            "issuer": issuer,
+            "authorization_endpoint": issuer + "authorize",
+            "token_endpoint": issuer + "token",
+            "registration_endpoint": issuer + "register",
+            "response_types_supported": ["code"],
+            "grant_types_supported": ["authorization_code", "refresh_token"],
+            "code_challenge_methods_supported": ["S256"],
+            "token_endpoint_auth_methods_supported": ["client_secret_post", "client_secret_basic"],
+        },
+        status_code=200,
+    )
+
+
+def _oauth_issuer() -> str | None:
+    if not require_auth or not public_base_url:
+        return None
+    return public_base_url.rstrip("/") + "/"
+
+
+@mcp.custom_route("/.well-known/oauth-authorization-server/mcp", methods=["GET"], include_in_schema=False)
+async def _oauth_authz_server_alias(request):
+    # Some clients probe RFC 8414 metadata with a path suffix.
+    issuer = _oauth_issuer()
+    if not issuer:
+        return JSONResponse({"error": "auth_not_configured"}, status_code=404)
+    return JSONResponse(
+        {
+            "issuer": issuer,
+            "authorization_endpoint": issuer + "authorize",
+            "token_endpoint": issuer + "token",
+            "registration_endpoint": issuer + "register",
+            "scopes_supported": ["tool:tasks", "tool:notifications"],
+            "response_types_supported": ["code"],
+            "grant_types_supported": ["authorization_code", "refresh_token"],
+            "token_endpoint_auth_methods_supported": ["client_secret_post", "client_secret_basic"],
+            "code_challenge_methods_supported": ["S256"],
+        },
+        status_code=200,
+    )
+
+
+@mcp.custom_route("/mcp/.well-known/oauth-authorization-server", methods=["GET"], include_in_schema=False)
+async def _oauth_authz_server_alias2(request):
+    return await _oauth_authz_server_alias(request)
+
+
+@mcp.custom_route("/.well-known/openid-configuration/mcp", methods=["GET"], include_in_schema=False)
+async def _oidc_discovery_alias(request):
+    return await _oidc_discovery(request)
+
+
+@mcp.custom_route("/mcp/.well-known/openid-configuration", methods=["GET"], include_in_schema=False)
+async def _oidc_discovery_alias2(request):
+    return await _oidc_discovery(request)
+
+
+@mcp.custom_route("/.well-known/oauth-protected-resource", methods=["GET", "OPTIONS"], include_in_schema=False)
+async def _oauth_protected_resource(request):
+    """
+    RFC 9449 protected resource metadata (no path suffix).
+    ChatGPT probes this before /mcp variant.
+    """
+    issuer = _oauth_issuer()
+    if not issuer:
+        return JSONResponse({"error": "auth_not_configured"}, status_code=404)
+    return JSONResponse(
+        {
+            "resource": public_base_url.rstrip("/") + "/mcp",
+            "authorization_servers": [issuer],
+            "scopes_supported": ["tool:tasks", "tool:notifications"],
+        },
+        status_code=200,
+    )
+
+
+@mcp.custom_route("/auth/callback", methods=["GET"], include_in_schema=False)
+async def _auth0_callback(request):
+    """
+    OAuth callback endpoint used by Auth0BackedOAuthProvider.
+    This route is intentionally public (FastMCP custom routes bypass auth middleware).
+    """
+    provider = auth_server_provider
+    if provider is None:
+        return JSONResponse({"error": "auth_not_configured"}, status_code=400)
+
+    state = request.query_params.get("state")
+    code = request.query_params.get("code")
+    if not state or not code:
+        return JSONResponse({"error": "invalid_callback", "message": "Missing state or code"}, status_code=400)
+
+    try:
+        redirect_to = await provider.complete_auth0_callback(state=state, code=code)
+        return RedirectResponse(url=redirect_to, status_code=302)
+    except Exception as e:
+        return JSONResponse({"error": "callback_failed", "message": str(e)}, status_code=400)
 
 
 class ShowTaskBoardInput(BaseModel):
@@ -326,6 +510,12 @@ class MarkNotificationStatusInput(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
 
+class SetSlackCredentialsInput(BaseModel):
+    slack_bot_token: str = Field(..., description="Slack bot token (xoxb-...)")
+    slack_default_channel: Optional[str] = Field(None, description="Default channel (e.g. #general)")
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+
 SCHEMAS: Dict[str, Dict[str, Any]] = {
     "show-task-board": ShowTaskBoardInput.model_json_schema(),
     "show-task-detail": ShowTaskDetailInput.model_json_schema(),
@@ -341,6 +531,7 @@ SCHEMAS: Dict[str, Dict[str, Any]] = {
     "list-notifications": ListNotificationsInput.model_json_schema(),
     "cancel-notification": CancelNotificationInput.model_json_schema(),
     "mark-notification-status": MarkNotificationStatusInput.model_json_schema(),
+    "set-slack-credentials": SetSlackCredentialsInput.model_json_schema(),
 }
 
 
@@ -367,6 +558,7 @@ TOOL_ANNOTATIONS: Dict[str, Dict[str, Any]] = {
     "list-notifications": _annotation(True),
     "cancel-notification": _annotation(False),
     "mark-notification-status": _annotation(False),
+    "set-slack-credentials": _annotation(False),
 }
 
 def _api_tool_meta(name: str) -> Dict[str, Any]:
@@ -377,7 +569,7 @@ def _api_tool_meta(name: str) -> Dict[str, Any]:
     return {
         "securitySchemes": security,
         "openai/widgetAccessible": True,
-        "openai/visibility": "public",
+        "openai/visibility": "private" if name == "set-slack-credentials" else "public",
         "openai/toolInvocation/invoking": f"Running {name}…",
         "openai/toolInvocation/invoked": "Done",
     }
@@ -490,35 +682,42 @@ async def _call_tool_request(req: types.CallToolRequest) -> types.ServerResult:
     name = req.params.name
     args = req.params.arguments or {}
 
-    # Context meta for pseudo-user
-    meta: Optional[Dict[str, Any]] = None
-    # IMPORTANT: in the installed mcp version, client metadata lives on req.params.meta (not _meta).
-    for candidate in (
-        getattr(req.params, "meta", None),
-        getattr(req, "meta", None),
-        getattr(req, "_meta", None),  # legacy/defensive
-        getattr(req.params, "_meta", None),  # legacy/defensive
-    ):
-        if isinstance(candidate, dict):
-            meta = candidate
-            break
-    if meta is None:
-        # Fall back to model_dump inspection (robust across mcp versions)
-        try:
-            dumped = req.model_dump()
-        except Exception:
-            dumped = {}
+    # Authenticated identity (preferred when TASK_MANAGER_REQUIRE_AUTH=1)
+    access = get_access_token()
+    if access is not None:
+        user_subject = access.client_id
+        print(f"[DEBUG] Tool '{name}' - user_subject from OAuth: {user_subject}")
+    else:
+        print(f"[DEBUG] Tool '{name}' - No access token, falling back to _meta")
+        # Context meta for pseudo-user (dev fallback)
+        meta: Optional[Dict[str, Any]] = None
+        # IMPORTANT: in the installed mcp version, client metadata lives on req.params.meta (not _meta).
         for candidate in (
-            dumped.get("params", {}).get("meta"),
-            dumped.get("meta"),
-            dumped.get("params", {}).get("_meta"),
-            dumped.get("_meta"),
+            getattr(req.params, "meta", None),
+            getattr(req, "meta", None),
+            getattr(req, "_meta", None),  # legacy/defensive
+            getattr(req.params, "_meta", None),  # legacy/defensive
         ):
             if isinstance(candidate, dict):
                 meta = candidate
                 break
+        if meta is None:
+            # Fall back to model_dump inspection (robust across mcp versions)
+            try:
+                dumped = req.model_dump()
+            except Exception:
+                dumped = {}
+            for candidate in (
+                dumped.get("params", {}).get("meta"),
+                dumped.get("meta"),
+                dumped.get("params", {}).get("_meta"),
+                dumped.get("_meta"),
+            ):
+                if isinstance(candidate, dict):
+                    meta = candidate
+                    break
 
-    user_subject = get_user_subject(meta)
+        user_subject = get_user_subject(meta)
 
     pool = await _get_pool()
 
@@ -621,6 +820,28 @@ async def _call_tool_request(req: types.CallToolRequest) -> types.ServerResult:
             payload = MarkNotificationStatusInput.model_validate(args)
             result = await mark_notification_status(pool, user_subject=user_subject, **payload.model_dump())
             return types.ServerResult(result)
+
+        if name == "set-slack-credentials":
+            payload = SetSlackCredentialsInput.model_validate(args)
+            # Store per-user Slack credentials (used by notifications tools).
+            await pool.execute(
+                """
+                insert into public.user_slack_credentials (user_subject, slack_bot_token, slack_default_channel)
+                values ($1, $2, $3)
+                on conflict (user_subject)
+                do update set slack_bot_token = excluded.slack_bot_token,
+                              slack_default_channel = excluded.slack_default_channel
+                """,
+                user_subject,
+                payload.slack_bot_token,
+                payload.slack_default_channel,
+            )
+            return types.ServerResult(
+                types.CallToolResult(
+                    content=[types.TextContent(type="text", text="Saved Slack credentials for this user.")],
+                    structuredContent={"saved": True},
+                )
+            )
 
         return types.ServerResult(
             types.CallToolResult(

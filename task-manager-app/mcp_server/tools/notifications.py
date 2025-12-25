@@ -129,8 +129,12 @@ async def create_notification_intent(
 
     # If send_now, deliver immediately via Slack and mark row as sent.
     if send_now and notif["type"] == "slack":
-        token = os.environ.get("SLACK_BOT_TOKEN")
-        default_channel = os.environ.get("SLACK_DEFAULT_CHANNEL")
+        creds = await pool.fetchrow(
+            "select slack_bot_token, slack_default_channel from public.user_slack_credentials where user_subject = $1",
+            user_subject,
+        )
+        token = creds["slack_bot_token"] if creds else os.environ.get("SLACK_BOT_TOKEN")
+        default_channel = creds["slack_default_channel"] if creds else os.environ.get("SLACK_DEFAULT_CHANNEL")
         slack_channel = notif["destination"] or default_channel
         if not token:
             return types.CallToolResult(
@@ -204,8 +208,13 @@ async def schedule_slack_notification(
     notification_id: str,
     channel: Optional[str] = None,
 ) -> types.CallToolResult:
-    token = os.environ.get("SLACK_BOT_TOKEN")
-    default_channel = os.environ.get("SLACK_DEFAULT_CHANNEL")
+    # Prefer per-user Slack credentials (multi-user). Fall back to env for single-user tutorials.
+    creds = await pool.fetchrow(
+        "select slack_bot_token, slack_default_channel from public.user_slack_credentials where user_subject = $1",
+        user_subject,
+    )
+    token = creds["slack_bot_token"] if creds else os.environ.get("SLACK_BOT_TOKEN")
+    default_channel = creds["slack_default_channel"] if creds else os.environ.get("SLACK_DEFAULT_CHANNEL")
     if not token:
         return types.CallToolResult(
             content=[types.TextContent(type="text", text="SLACK_BOT_TOKEN is not set.")],

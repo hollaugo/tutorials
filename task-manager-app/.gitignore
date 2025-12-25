@@ -5,6 +5,7 @@ __pycache__/
 web/node_modules/
 web/dist/
 .env
+.docs/
 supabase/.temp/
 supabase/.branches/
 
