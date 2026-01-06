@@ -4,10 +4,12 @@ import asyncio
 from shopify_utils import ShopifyUtils
 
 async def test_shopify():
-    # Set environment variables
-    os.environ['SHOPIFY_SHOP_NAME'] = '72c907-3f.myshopify.com'
-    os.environ['SHOPIFY_ADMIN_API_TOKEN'] = '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'
-    os.environ['SHOPIFY_API_VERSION'] = '2024-07'
+    # Set environment variables (load from .env or set manually)
+    # os.environ['SHOPIFY_SHOP_NAME'] = 'your-shop.myshopify.com'
+    # os.environ['SHOPIFY_ADMIN_API_TOKEN'] = 'your-token-here'
+    # os.environ['SHOPIFY_API_VERSION'] = '2024-07'
+    from dotenv import load_dotenv
+    load_dotenv()
     
     utils = ShopifyUtils()
     
