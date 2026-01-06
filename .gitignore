@@ -60,3 +60,5 @@ yarn.lock
 
 .kiro/
 blog_post.md
+.docs
+.claude

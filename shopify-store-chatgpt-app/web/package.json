@@ -1,0 +1,23 @@
+{
+  "name": "shopify-store-ui",
+  "version": "1.0.0",
+  "description": "Shopify Store UI Components for ChatGPT",
+  "scripts": {
+    "build": "npm run build:carousel && npm run build:detail && npm run build:compare && npm run build:cart",
+    "build:carousel": "esbuild src/ProductCarouselComponent.tsx --bundle --outfile=dist/product-carousel.js --format=esm --minify",
+    "build:detail": "esbuild src/ProductDetailComponent.tsx --bundle --outfile=dist/product-detail.js --format=esm --minify",
+    "build:compare": "esbuild src/CompareProductsComponent.tsx --bundle --outfile=dist/product-compare.js --format=esm --minify",
+    "build:cart": "esbuild src/CartComponent.tsx --bundle --outfile=dist/cart.js --format=esm --minify",
+    "watch": "esbuild src/ProductCarouselComponent.tsx --bundle --format=esm --outfile=dist/product-carousel.js --watch"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "esbuild": "^0.19.0",
+    "typescript": "^5.0.0"
+  }
+}

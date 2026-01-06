@@ -12,7 +12,9 @@ This repository contains multiple agent implementations, each demonstrating diff
 | [mcp-financial](#mcp-financial) | FastMCP + FastAPI | ASGI integration, CLI client | Financial data analysis |
 | [bright-mcp-server-overview](#bright-mcp-server-overview) | Dual: LangGraph + ADK | Memory persistence, extended timeouts | Web scraping & research |
 | [fpl-deepagent](#fpl-deepagent) | FastMCP + React UI | Streamable HTTP, ChatGPT integration | Fantasy Premier League |
+| [task-manager-app](#task-manager-app) | FastMCP + React UI + Supabase | OAuth (Auth0), per-user DB state, Slack notifications | Task management in ChatGPT |
 | [notion-mcp-agent](#notion-mcp-agent) | LangGraph + MCP | Notion integration, database management | Knowledge management |
+| [claude-advanced-tool-use](#claude-advanced-tool-use) | Claude API + FastMCP | PTC, Tool Search, MCP integration | Token-efficient AI agents |
 | [claude-skills](#claude-skills) | Claude Skills API | Document generation, custom skills | PowerPoint, Excel, Word creation |
 | [openai-chatkit-starter-app](#openai-chatkit-starter-app) | Next.js + ChatKit | Agent Builder integration, web component | ChatKit UI development |
 | [mastra-overview](#mastra-overview) | Mastra framework | Multi-LLM orchestration | Framework exploration |
@@ -138,6 +140,19 @@ A comprehensive Fantasy Premier League assistant that integrates with ChatGPT th
 - FPL team optimization
 - Real-time price and form tracking
 
+### task-manager-app/
+**Task Manager ChatGPT App (Apps SDK + MCP + Supabase + OAuth)**
+
+A production-ready tutorial showing how to build a ChatGPT App with:
+- **FastMCP (Streamable HTTP)** as the MCP server
+- **React widgets** rendered inside ChatGPT
+- **Supabase (Postgres)** as authoritative state for tasks/notifications
+- **OAuth (Auth0)** for multi-user authentication (MCP OAuth)
+- Optional **Slack notifications** (send now + schedule)
+
+Start here:
+- `task-manager-app/README.md`
+
 ### notion-mcp-agent/
 **Notion Knowledge Management Agent**
 
@@ -162,6 +177,45 @@ A sophisticated agent that integrates with Notion through MCP, providing intelli
 - Content aggregation and structuring
 - Team collaboration workflows
 - Information retrieval and organization
+
+### claude-advanced-tool-use/
+**Claude Advanced Tool Use Tutorial**
+
+A comprehensive tutorial demonstrating Anthropic's Advanced Tool Use features: Programmatic Tool Calling (PTC) and Tool Search. These features enable AI agents to scale to thousands of tools while dramatically reducing token usage.
+
+**Key Features:**
+- **Programmatic Tool Calling (PTC)**: Claude writes Python code that orchestrates tool calls in a sandbox
+- **Tool Search**: Dynamic tool discovery with `defer_loading` for efficient context usage
+- **MCP Integration**: Tool Search combined with MCP servers via `mcp_toolset`
+- **Real-World Examples**: Financial data tools using yfinance
+- **Token Savings**: Up to 98% reduction in token usage for complex tasks
+
+**Technical Stack:**
+- Anthropic Claude API (Sonnet 4.5)
+- Beta headers: `advanced-tool-use-2025-11-20`
+- FastMCP for MCP server implementation
+- Python + yfinance for financial data
+- ngrok for MCP server tunneling
+
+**Examples:**
+- `01_ptc_token_savings.py` - Programmatic Tool Calling with token comparison
+- `02_tool_search.py` - Tool Search with 10 deferred financial tools
+- `03_mcp_tool_search.py` - MCP + Tool Search via ngrok tunnel
+- `mcp_server.py` - FastMCP server exposing financial tools
+
+**Key Concepts:**
+| Feature | Description | Token Savings |
+|---------|-------------|---------------|
+| Programmatic Tool Calling | Tool results stay in sandbox, only `print()` output enters context | 37% |
+| Tool Search | Only load tool definitions when discovered | 85% |
+| Combined | PTC + Tool Search together | Up to 98% |
+
+**Use Cases:**
+- Building AI agents with many tools (100+)
+- Reducing context window bloat from tool definitions
+- Processing large datasets without context overflow
+- MCP server integration with dynamic tool discovery
+- Token-efficient financial analysis agents
 
 ### claude-skills/
 **Claude Skills API Implementation**
@@ -283,7 +337,7 @@ A comprehensive development environment for MCP (Model Context Protocol) with Fa
 Each project includes comprehensive setup instructions in its respective README file. General prerequisites include:
 
 ### Common Requirements
-- Python 3.9+
+- Python 3.9+ (some projects require newer; see each project README)
 - Valid API keys for respective services
 - Slack workspace access (for Slack integrations)
 - Environment variable configuration
@@ -294,7 +348,10 @@ Each project includes comprehensive setup instructions in its respective README 
 cd [project-name]/
 
 # 2. Install dependencies
-pip install -r requirements.txt
+# Most Python projects here use uv:
+uv sync
+# Some projects use pip/requirements.txt:
+# pip install -r requirements.txt
 
 # 3. Configure environment
 cp .env.example .env
@@ -363,6 +420,10 @@ MIT License - see individual project LICENSE files for details.
 - [OpenAI ChatKit](http://openai.github.io/chatkit-js/)
 - [OpenAI Agent Builder](https://platform.openai.com/agent-builder)
 - [Claude Skills API](https://docs.claude.com/en/api/skills-guide)
+- [Claude Programmatic Tool Calling](https://platform.claude.com/docs/en/agents-and-tools/tool-use/programmatic-tool-calling)
+- [Claude Tool Search](https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool)
+- [Anthropic Blog - Advanced Tool Use](https://www.anthropic.com/engineering/advanced-tool-use)
+- [Anthropic Blog - Code Execution](https://www.anthropic.com/engineering/code-execution-with-mcp)
 - [Anthropic Console](https://console.anthropic.com/)
 - [Google ADK](https://developers.google.com/ai/adk)
 - [FastMCP](https://github.com/pydantic/fastmcp)

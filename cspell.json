@@ -1,0 +1,23 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.venv/**",
+    "**/__pycache__/**",
+    "**/uv.lock",
+    "**/package-lock.json"
+  ],
+  "words": [
+    "Auth0",
+    "ChatGPT",
+    "FastMCP",
+    "Kanban",
+    "MCP",
+    "ngrok",
+    "Supabase"
+  ]
+}
+
+

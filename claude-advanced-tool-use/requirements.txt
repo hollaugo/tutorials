@@ -1,0 +1,5 @@
+anthropic>=0.40.0
+yfinance>=0.2.50
+python-dotenv>=1.0.0
+fastmcp>=0.1.0
+uvicorn>=0.30.0

@@ -25,7 +25,8 @@ This tutorial project is a **ChatGPT App** built with the **Apps SDK** and an **
 ## Step 1 — Clone & install dependencies
 
 ```bash
-cd /Users/uosuji/prompt-circle-phoenix/tutorials/task-manager-app
+git clone https://github.com/hollaugo/tutorials.git
+cd tutorials/task-manager-app
 uv sync
 
 cd web
@@ -40,7 +41,7 @@ npm run build
 Start `Supabase` and run migrations:
 
 ```bash
-cd /Users/uosuji/prompt-circle-phoenix/tutorials/task-manager-app
+cd task-manager-app
 supabase start
 supabase db reset
 ```
@@ -48,7 +49,7 @@ supabase db reset
 Or run the helper script (recommended):
 
 ```bash
-cd /Users/uosuji/prompt-circle-phoenix/tutorials/task-manager-app
+cd task-manager-app
 ./SUPABASE_START.sh
 ```
 
@@ -74,6 +75,12 @@ Optional (Slack notifications):
 - `SLACK_BOT_TOKEN=xoxb-...`
 - `SLACK_DEFAULT_CHANNEL=#general` (or any channel the bot is in)
 
+Tip: you can start from the template:
+
+```bash
+cp .env.example .env.local
+```
+
 ## OAuth (Auth0) — multi-user mode (recommended for real deployments)
 
 This project can run in **multi-user OAuth mode** where ChatGPT authenticates users through Auth0 and the MCP server issues its own short-lived access tokens (scoped to the authenticated user).
@@ -94,6 +101,8 @@ Add the following to `.env.local`:
 - Create an Auth0 Application (Regular Web App works well for this tutorial).
 - Ensure the Application has **Allowed Callback URLs** that include:
   - `https://<your-ngrok-domain>/auth/callback`
+  - `https://chatgpt.com/connector_platform_oauth_redirect`
+  - `https://platform.openai.com/apps-manage/oauth` (recommended for app review/submission)
 
 Notes:
 - ChatGPT will attempt **dynamic client registration** against your MCP server; this project enables it automatically when `TASK_MANAGER_REQUIRE_AUTH=1`.
@@ -102,7 +111,7 @@ Notes:
 ## Step 4 — Run the MCP server
 
 ```bash
-cd /Users/uosuji/prompt-circle-phoenix/tutorials/task-manager-app
+cd task-manager-app
 ./START.sh
 ```
 
@@ -123,6 +132,10 @@ Copy the HTTPS forwarding URL and append `/mcp`:
 
 - **Connector URL**: `https://<your-ngrok-domain>/mcp`
 
+Important: when your public tunnel URL changes, you must update:
+- `.env.local`: `TASK_MANAGER_PUBLIC_URL=https://<your-ngrok-domain>`
+- Auth0 Allowed Callback URLs: `https://<your-ngrok-domain>/auth/callback`
+
 ### If you hit `421 Misdirected Request` / invalid host header
 
 FastMCP may reject unknown Host headers when fronted by `ngrok`. For local dev, add one of these to `.env.local`:
@@ -135,7 +148,7 @@ FastMCP may reject unknown Host headers when fronted by `ngrok`. For local dev, 
 ## Step 6 — Test tools locally with MCP Inspector (optional but recommended)
 
 ```bash
-cd /Users/uosuji/prompt-circle-phoenix/tutorials/task-manager-app
+cd task-manager-app
 ./START.sh --inspector
 ```
 
@@ -184,4 +197,18 @@ Notifications:
 - **UI state**
   - `web/src/hooks.ts` (`useWidgetState`, `useToolOutput`)
   - `web/src/ui/TaskBoardComponent.tsx` (widget state + local UI state + refresh policy)
+
+## Troubleshooting
+
+### `supabase` won’t start: port already allocated
+
+If `supabase start` fails with something like “port is already allocated”, another local `supabase` project is running.
+
+- Stop all local `supabase` projects:
+
+```bash
+supabase stop --all
+```
+
+- Or change the db port in `supabase/config.toml` for this project.
 
