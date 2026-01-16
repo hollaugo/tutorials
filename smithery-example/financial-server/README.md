@@ -1,5 +1,7 @@
 # Financial Research MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@hollaugo/financial-research-mcp-server)](https://smithery.ai/server/@hollaugo/financial-research-mcp-server)
+
 A comprehensive Model Context Protocol (MCP) server for financial research and analysis, built with FastMCP and deployed on Smithery.
 
 ## Features
@@ -41,6 +43,14 @@ uv run playground
 ### Deployment
 
 This server is configured for deployment on Smithery. The server module is defined in `src/fin-research-server/server.py` and configured in `pyproject.toml`.
+
+### Installing via Smithery
+
+To install financial-research-mcp-server automatically via [Smithery](https://smithery.ai/server/@hollaugo/financial-research-mcp-server):
+
+```bash
+npx -y @smithery/cli install @hollaugo/financial-research-mcp-server
+```
 
 ## Dependencies
 
