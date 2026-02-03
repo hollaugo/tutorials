@@ -1,0 +1,76 @@
+{
+  "name": "render",
+  "description": "Render MCP integration for deployment",
+  "url": "https://mcp.render.com/mcp",
+  "documentation": "https://render.com/docs/mcp-server",
+
+  "authentication": {
+    "type": "bearer",
+    "envVar": "RENDER_API_KEY",
+    "description": "Generate API key from Render Account Settings"
+  },
+
+  "capabilities": {
+    "create": {
+      "webService": "Create web services from Docker or GitHub",
+      "postgres": "Create PostgreSQL databases",
+      "keyValue": "Create Key-Value stores"
+    },
+    "read": {
+      "services": "List and get service details",
+      "databases": "List and get database details",
+      "logs": "Fetch service logs",
+      "metrics": "Get CPU, memory, and response time metrics",
+      "deploys": "View deployment history"
+    },
+    "modify": {
+      "envVars": "Update environment variables (only modifiable setting)"
+    }
+  },
+
+  "limitations": [
+    "Cannot delete resources",
+    "Cannot modify most settings (except env vars)",
+    "No support for free tier via MCP",
+    "No cron jobs or background workers"
+  ],
+
+  "useCases": [
+    {
+      "trigger": "/chatgpt-app:deploy",
+      "description": "Deploy ChatGPT App to Render",
+      "actions": [
+        "Set workspace",
+        "Create web service",
+        "Create PostgreSQL database",
+        "Configure environment variables",
+        "Verify deployment health"
+      ]
+    }
+  ],
+
+  "setupCommands": {
+    "claudeCode": "claude mcp add --transport http render https://mcp.render.com/mcp --header \"Authorization: Bearer $RENDER_API_KEY\"",
+    "cursor": {
+      "file": "~/.cursor/mcp.json",
+      "config": {
+        "mcpServers": {
+          "render": {
+            "url": "https://mcp.render.com/mcp",
+            "headers": {
+              "Authorization": "Bearer <YOUR_API_KEY>"
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "workflowExample": [
+    "Set my Render workspace to {workspace-name}",
+    "Create a PostgreSQL database named {app-name}-db",
+    "Create a web service named {app-name} from Docker",
+    "Set environment variable DATABASE_URL for {app-name}",
+    "Get the status of service {app-name}"
+  ]
+}

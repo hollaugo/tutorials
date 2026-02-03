@@ -1,0 +1,253 @@
+import * as React from "react";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  AreaChart,
+  Area,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
+import { cn } from "../../lib/utils";
+
+// Chart color palette using CSS variables
+const CHART_COLORS = [
+  "hsl(var(--chart-1))",
+  "hsl(var(--chart-2))",
+  "hsl(var(--chart-3))",
+  "hsl(var(--chart-4))",
+  "hsl(var(--chart-5))",
+];
+
+interface ChartContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
+const ChartContainer = React.forwardRef<HTMLDivElement, ChartContainerProps>(
+  ({ className, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn("w-full h-[300px]", className)}
+      {...props}
+    >
+      <ResponsiveContainer width="100%" height="100%">
+        {children as React.ReactElement}
+      </ResponsiveContainer>
+    </div>
+  )
+);
+ChartContainer.displayName = "ChartContainer";
+
+// Custom tooltip component
+interface ChartTooltipContentProps {
+  active?: boolean;
+  payload?: Array<{ name: string; value: number; color: string }>;
+  label?: string;
+  formatter?: (value: number, name: string) => string;
+}
+
+function ChartTooltipContent({
+  active,
+  payload,
+  label,
+  formatter,
+}: ChartTooltipContentProps) {
+  if (!active || !payload) return null;
+
+  return (
+    <div className="rounded-lg border bg-background p-2 shadow-sm">
+      <div className="text-xs text-muted-foreground mb-1">{label}</div>
+      {payload.map((entry, index) => (
+        <div key={index} className="flex items-center gap-2 text-sm">
+          <div
+            className="w-2 h-2 rounded-full"
+            style={{ backgroundColor: entry.color }}
+          />
+          <span className="text-muted-foreground">{entry.name}:</span>
+          <span className="font-medium">
+            {formatter ? formatter(entry.value, entry.name) : entry.value}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Pre-configured chart components
+interface BaseChartProps {
+  data: Array<Record<string, unknown>>;
+  xAxisKey: string;
+  className?: string;
+}
+
+interface LineChartProps extends BaseChartProps {
+  lines: Array<{ key: string; name?: string; color?: string }>;
+}
+
+function SimpleLineChart({ data, xAxisKey, lines, className }: LineChartProps) {
+  return (
+    <ChartContainer className={className}>
+      <LineChart data={data} accessibilityLayer>
+        <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+        <XAxis
+          dataKey={xAxisKey}
+          className="text-xs text-muted-foreground"
+          tickLine={false}
+          axisLine={false}
+        />
+        <YAxis
+          className="text-xs text-muted-foreground"
+          tickLine={false}
+          axisLine={false}
+        />
+        <Tooltip content={<ChartTooltipContent />} />
+        <Legend />
+        {lines.map((line, index) => (
+          <Line
+            key={line.key}
+            type="monotone"
+            dataKey={line.key}
+            name={line.name || line.key}
+            stroke={line.color || CHART_COLORS[index % CHART_COLORS.length]}
+            strokeWidth={2}
+            dot={false}
+            activeDot={{ r: 4 }}
+          />
+        ))}
+      </LineChart>
+    </ChartContainer>
+  );
+}
+
+interface BarChartProps extends BaseChartProps {
+  bars: Array<{ key: string; name?: string; color?: string }>;
+  stacked?: boolean;
+}
+
+function SimpleBarChart({ data, xAxisKey, bars, stacked, className }: BarChartProps) {
+  return (
+    <ChartContainer className={className}>
+      <BarChart data={data} accessibilityLayer>
+        <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+        <XAxis
+          dataKey={xAxisKey}
+          className="text-xs text-muted-foreground"
+          tickLine={false}
+          axisLine={false}
+        />
+        <YAxis
+          className="text-xs text-muted-foreground"
+          tickLine={false}
+          axisLine={false}
+        />
+        <Tooltip content={<ChartTooltipContent />} />
+        <Legend />
+        {bars.map((bar, index) => (
+          <Bar
+            key={bar.key}
+            dataKey={bar.key}
+            name={bar.name || bar.key}
+            fill={bar.color || CHART_COLORS[index % CHART_COLORS.length]}
+            stackId={stacked ? "stack" : undefined}
+            radius={[4, 4, 0, 0]}
+          />
+        ))}
+      </BarChart>
+    </ChartContainer>
+  );
+}
+
+interface AreaChartProps extends BaseChartProps {
+  areas: Array<{ key: string; name?: string; color?: string }>;
+  stacked?: boolean;
+}
+
+function SimpleAreaChart({ data, xAxisKey, areas, stacked, className }: AreaChartProps) {
+  return (
+    <ChartContainer className={className}>
+      <AreaChart data={data} accessibilityLayer>
+        <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+        <XAxis
+          dataKey={xAxisKey}
+          className="text-xs text-muted-foreground"
+          tickLine={false}
+          axisLine={false}
+        />
+        <YAxis
+          className="text-xs text-muted-foreground"
+          tickLine={false}
+          axisLine={false}
+        />
+        <Tooltip content={<ChartTooltipContent />} />
+        <Legend />
+        {areas.map((area, index) => (
+          <Area
+            key={area.key}
+            type="monotone"
+            dataKey={area.key}
+            name={area.name || area.key}
+            fill={area.color || CHART_COLORS[index % CHART_COLORS.length]}
+            stroke={area.color || CHART_COLORS[index % CHART_COLORS.length]}
+            fillOpacity={0.3}
+            stackId={stacked ? "stack" : undefined}
+          />
+        ))}
+      </AreaChart>
+    </ChartContainer>
+  );
+}
+
+interface PieChartProps {
+  data: Array<{ name: string; value: number; color?: string }>;
+  className?: string;
+  innerRadius?: number;
+  showLabel?: boolean;
+}
+
+function SimplePieChart({ data, className, innerRadius = 0, showLabel = true }: PieChartProps) {
+  return (
+    <ChartContainer className={className}>
+      <PieChart accessibilityLayer>
+        <Tooltip content={<ChartTooltipContent />} />
+        <Legend />
+        <Pie
+          data={data}
+          dataKey="value"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          innerRadius={innerRadius}
+          outerRadius="80%"
+          paddingAngle={2}
+          label={showLabel ? ({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%` : false}
+          labelLine={showLabel}
+        >
+          {data.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={entry.color || CHART_COLORS[index % CHART_COLORS.length]}
+            />
+          ))}
+        </Pie>
+      </PieChart>
+    </ChartContainer>
+  );
+}
+
+export {
+  ChartContainer,
+  ChartTooltipContent,
+  SimpleLineChart,
+  SimpleBarChart,
+  SimpleAreaChart,
+  SimplePieChart,
+  CHART_COLORS,
+};

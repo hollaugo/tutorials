@@ -1,0 +1,48 @@
+{
+  "name": "{{kebabCase appName}}",
+  "version": "1.0.0",
+  "description": "{{appDescription}}",
+  "type": "module",
+  "scripts": {
+    "build": "npm run build:server && npm run build:web",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:web": "cd web && npm run build",
+    "start": "node dist/server/index.js",
+    "start:http": "HTTP_MODE=true node dist/server/index.js",
+    "start:stdio": "node dist/server/index.js --stdio",
+    "dev": "tsx watch server/index.ts",
+    "dev:http": "HTTP_MODE=true tsx watch server/index.ts",
+    "test": "npm run validate && npm run test:mcp",
+    "validate": "tsx scripts/validate.ts",
+    "test:mcp": "tsx scripts/test-mcp.ts",
+    "lint": "eslint server web/src"{{#if database}},
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:migrate": "supabase db push",
+    "db:status": "supabase status"{{/if}}
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "dotenv": "^16.4.0",
+    "express": "^4.18.2",
+    "zod": "^3.23.0"{{#if database}},
+    "pg": "^8.11.0"{{/if}}{{#if auth.auth0}},
+    "jose": "^5.2.0"{{/if}}{{#if auth.supabase}},
+    "@supabase/supabase-js": "^2.39.0"{{/if}}
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.0.0",{{#if database}}
+    "@types/pg": "^8.11.0",{{/if}}
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0",
+    "esbuild": "^0.20.0",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

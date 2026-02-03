@@ -1,0 +1,58 @@
+{
+  "name": "supabase",
+  "description": "Supabase MCP integration for database management",
+  "url": "https://mcp.supabase.com/mcp",
+  "documentation": "https://supabase.com/docs/guides/getting-started/mcp",
+
+  "authentication": {
+    "type": "oauth",
+    "dynamicClientRegistration": true,
+    "description": "Uses OAuth flow - browser will open for authentication"
+  },
+
+  "capabilities": {
+    "database": {
+      "query": "Run SQL queries against your database",
+      "schema": "View and modify database schema",
+      "migrations": "Apply schema migrations"
+    },
+    "auth": {
+      "users": "Manage authentication users",
+      "providers": "Configure auth providers"
+    }
+  },
+
+  "useCases": [
+    {
+      "trigger": "/chatgpt-app:add-database",
+      "description": "Set up database for ChatGPT App",
+      "actions": [
+        "Select or create Supabase project",
+        "Generate and apply migrations",
+        "Validate schema",
+        "Test queries"
+      ]
+    },
+    {
+      "trigger": "/chatgpt-app:test",
+      "description": "Test database operations",
+      "actions": [
+        "Run test queries",
+        "Verify data isolation",
+        "Check indexes"
+      ]
+    }
+  ],
+
+  "securityNotes": [
+    "Use development projects only for AI-assisted operations",
+    "Enable read-only mode when possible",
+    "Scope servers to specific projects",
+    "Be aware of prompt injection risks"
+  ],
+
+  "setupCommands": {
+    "claudeCode": "claude mcp add supabase https://mcp.supabase.com/mcp",
+    "manual": "Configure via .cursor/mcp.json or equivalent"
+  }
+}

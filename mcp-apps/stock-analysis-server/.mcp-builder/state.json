@@ -1,0 +1,49 @@
+{
+  "name": "stock-analysis-server",
+  "version": "1.0.0",
+  "createdAt": "2026-02-02T00:00:00.000Z",
+  "updatedAt": "2026-02-02T00:00:00.000Z",
+  "pattern": "widget-enabled",
+  "language": "typescript",
+  "tools": [
+    {
+      "name": "get-stock-summary",
+      "description": "Get comprehensive stock information including current price, daily change, volume, and key metrics",
+      "inputs": {
+        "ticker": { "type": "string", "required": true }
+      },
+      "widget": "StockSummaryCard",
+      "resourceUri": "ui://stock-summary/app.html"
+    },
+    {
+      "name": "compare-stocks",
+      "description": "Compare multiple stocks side-by-side with key metrics and performance",
+      "inputs": {
+        "tickers": { "type": "array", "items": "string", "minItems": 2, "maxItems": 5, "required": true }
+      },
+      "widget": "CompareTable",
+      "resourceUri": "ui://compare-stocks/app.html"
+    },
+    {
+      "name": "get-price-history",
+      "description": "Get historical price data with chart visualization",
+      "inputs": {
+        "ticker": { "type": "string", "required": true },
+        "period": { "type": "string", "enum": ["1D", "1W", "1M", "3M", "1Y", "5Y"], "default": "1M" }
+      },
+      "widget": "PriceChart",
+      "resourceUri": "ui://price-history/app.html"
+    }
+  ],
+  "resources": [
+    { "uri": "ui://stock-summary/app.html", "widget": "stock-summary.tsx" },
+    { "uri": "ui://compare-stocks/app.html", "widget": "compare-stocks.tsx" },
+    { "uri": "ui://price-history/app.html", "widget": "price-history.tsx" }
+  ],
+  "status": "scaffolded",
+  "apiIntegration": {
+    "provider": "alpha-vantage",
+    "fallback": "widget-sendMessage",
+    "notes": "Uses Alpha Vantage API (free 25 calls/day, 'demo' key for testing). If API fails, widgets use sendMessage to request data from the model."
+  }
+}

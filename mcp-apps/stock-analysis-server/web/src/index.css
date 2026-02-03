@@ -1,0 +1,287 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif);
+  background: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Stock Card Base */
+.stock-card {
+  max-width: 520px;
+  min-width: 380px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 12px 24px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.stock-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+}
+
+/* Compare Table */
+.compare-card {
+  max-width: 700px;
+  min-width: 500px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 12px 24px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.compare-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6 0%, #10b981 50%, #8b5cf6 100%);
+}
+
+/* Chart Card */
+.chart-card {
+  max-width: 600px;
+  min-width: 400px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 12px 24px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Price colors */
+.price-up {
+  color: #10b981;
+}
+
+.price-down {
+  color: #ef4444;
+}
+
+.price-neutral {
+  color: #6b7280;
+}
+
+/* Metric grid */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.metric-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.metric-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metric-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Range bar */
+.range-bar {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.range-bar-fill {
+  position: absolute;
+  height: 100%;
+  background: linear-gradient(90deg, #ef4444 0%, #f59e0b 50%, #10b981 100%);
+  border-radius: 3px;
+}
+
+.range-bar-marker {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #1f2937;
+  border: 2px solid white;
+  border-radius: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Loading state */
+.loading-card {
+  background: linear-gradient(135deg, #f0f2f5 0%, #e8ebef 100%);
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-pulse {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.loading-skeleton {
+  background: #dde1e6;
+  border-radius: 8px;
+}
+
+/* Error state */
+.error-card {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  text-align: center;
+  padding: 32px 24px;
+}
+
+.error-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 12px;
+  color: #dc2626;
+}
+
+/* Table styles */
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.stock-table th {
+  text-align: left;
+  padding: 8px 12px;
+  font-weight: 500;
+  color: #6b7280;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.stock-table td {
+  padding: 12px;
+  border-bottom: 1px solid #f3f4f6;
+  font-variant-numeric: tabular-nums;
+}
+
+.stock-table tr:last-child td {
+  border-bottom: none;
+}
+
+.stock-table tr:hover td {
+  background: rgba(0, 0, 0, 0.01);
+}
+
+/* Period tabs */
+.period-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: #f3f4f6;
+  border-radius: 10px;
+}
+
+.period-tab {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.period-tab:hover {
+  color: #374151;
+}
+
+.period-tab.active {
+  background: white;
+  color: #1f2937;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+  .stock-card,
+  .chart-card {
+    min-width: auto;
+    max-width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .compare-card {
+    min-width: auto;
+    max-width: 100%;
+    padding: 12px;
+    overflow-x: auto;
+  }
+
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+}

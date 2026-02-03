@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "chatgpt-apps-plugin",
+  "version": "1.1.0",
+  "description": "Build ChatGPT Apps with MCP servers and inline widgets",
+  "owner": {
+    "name": "Prompt Circle",
+    "email": "info@promptcircle.ai"
+  },
+  "plugins": [
+    {
+      "name": "chatgpt-apps-builder",
+      "version": "1.1.0",
+      "description": "Build complete ChatGPT Apps with MCP servers, inline widgets, and cloud deployment",
+      "source": "./",
+      "category": "development",
+      "author": {
+        "name": "Prompt Circle"
+      }
+    }
+  ]
+}

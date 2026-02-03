@@ -19,6 +19,7 @@ This repository contains multiple agent implementations, each demonstrating diff
 | [openai-chatkit-starter-app](#openai-chatkit-starter-app) | Next.js + ChatKit | Agent Builder integration, web component | ChatKit UI development |
 | [mastra-overview](#mastra-overview) | Mastra framework | Multi-LLM orchestration | Framework exploration |
 | [smithery-example](#smithery-example) | Smithery + FastMCP | MCP playground, development tools | MCP development |
+| [mcp-apps](#mcp-apps) | MCP Apps (OpenAI Apps SDK) | Example MCP Apps (weather + stock analysis) | MCP Apps reference implementations |
 
 ## Project Descriptions
 
@@ -331,6 +332,22 @@ A comprehensive development environment for MCP (Model Context Protocol) with Fa
 - Financial data integration examples
 - Development environment setup
 - MCP learning and exploration
+
+### mcp-apps/
+**MCP Apps Examples (Weather + Stock Analysis)**
+
+Two minimal example MCP Apps showing how to build UI + server experiences using the MCP Apps extensions.
+
+**Key Features:**
+- **Weather App**: UI + MCP server example with a simple weather workflow
+- **Stock Analysis App**: UI + MCP server example for market/stock analysis
+- **Apps SDK**: Designed to follow MCP Apps extension patterns
+- **Docs Reference**: See the MCP Apps docs for the full guide
+
+**Use Cases:**
+- Learning MCP Apps fundamentals
+- Building UI-backed MCP Apps
+- Reference implementations for new MCP App projects
 
 ## Getting Started
 

@@ -1,0 +1,37 @@
+{
+  "serverName": "stock-research-server",
+  "pattern": "basic",
+  "language": "python",
+  "framework": "fastmcp",
+  "description": "Stock research and investment analysis MCP server using yfinance",
+  "tools": [
+    {
+      "name": "get_stock_summary",
+      "description": "Get comprehensive stock summary with price, metrics, company info, and news",
+      "status": "implemented"
+    },
+    {
+      "name": "get_financial_analysis",
+      "description": "Get detailed financial statements and key ratios",
+      "status": "implemented"
+    },
+    {
+      "name": "get_analyst_insights",
+      "description": "Get analyst recommendations, price targets, and rating changes",
+      "status": "implemented"
+    },
+    {
+      "name": "compare_stocks",
+      "description": "Compare multiple stocks side-by-side on key metrics",
+      "status": "implemented"
+    },
+    {
+      "name": "get_price_history",
+      "description": "Get historical price data with customizable period and interval",
+      "status": "implemented"
+    }
+  ],
+  "resources": [],
+  "createdAt": "2026-01-16T00:00:00Z",
+  "useCases": ["stock-research", "investment-analysis"]
+}

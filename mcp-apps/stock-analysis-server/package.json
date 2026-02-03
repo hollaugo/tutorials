@@ -1,0 +1,39 @@
+{
+  "name": "stock-analysis-server",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "npm run build:stock-summary && npm run build:compare-stocks && npm run build:price-history",
+    "build:stock-summary": "INPUT=stock-summary.html vite build --outDir ../dist/stock-summary",
+    "build:compare-stocks": "INPUT=compare-stocks.html vite build --outDir ../dist/compare-stocks",
+    "build:price-history": "INPUT=price-history.html vite build --outDir ../dist/price-history",
+    "serve": "tsx server/index.ts",
+    "dev": "npm run build && npm run serve"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/ext-apps": "^1.0.0",
+    "@modelcontextprotocol/sdk": "^1.24.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.15.0",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.0",
+    "@types/node": "22.10.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.3",
+    "vite": "^6.0.0",
+    "vite-plugin-singlefile": "^2.3.0"
+  }
+}

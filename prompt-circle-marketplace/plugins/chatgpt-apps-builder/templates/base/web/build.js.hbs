@@ -1,0 +1,80 @@
+#!/usr/bin/env node
+/**
+ * Widget Build Script
+ *
+ * Bundles React widgets using esbuild with:
+ * - TypeScript support
+ * - JSX automatic runtime
+ * - CSS injection (optional)
+ * - Minification for production
+ */
+
+import * as esbuild from "esbuild";
+import { readdirSync, existsSync } from "fs";
+import { join, basename } from "path";
+
+const isWatch = process.argv.includes("--watch");
+const srcDir = "./src/widgets";
+const outDir = "./dist";
+
+// Find all widget entry points
+function findWidgets() {
+  if (!existsSync(srcDir)) {
+    console.log("No widgets directory found at", srcDir);
+    return [];
+  }
+
+  return readdirSync(srcDir)
+    .filter(f => f.endsWith(".tsx"))
+    .map(f => ({
+      name: basename(f, ".tsx"),
+      entry: join(srcDir, f),
+    }));
+}
+
+async function build() {
+  const widgets = findWidgets();
+
+  if (widgets.length === 0) {
+    console.log("No widgets to build");
+    return;
+  }
+
+  console.log(`Building ${widgets.length} widget(s)...`);
+
+  const buildOptions = {
+    entryPoints: widgets.map(w => w.entry),
+    bundle: true,
+    minify: !isWatch,
+    format: "esm",
+    outdir: outDir,
+    jsx: "automatic",
+    splitting: false,
+    sourcemap: isWatch,
+    target: ["es2020"],
+    loader: {
+      ".tsx": "tsx",
+      ".ts": "ts",
+      ".css": "css",
+    },
+    external: [],
+    define: {
+      "process.env.NODE_ENV": isWatch ? '"development"' : '"production"',
+    },
+  };
+
+  if (isWatch) {
+    const ctx = await esbuild.context(buildOptions);
+    await ctx.watch();
+    console.log("Watching for changes...");
+  } else {
+    await esbuild.build(buildOptions);
+    widgets.forEach(w => console.log(`  ✓ ${w.name}.js`));
+    console.log("Build complete!");
+  }
+}
+
+build().catch((err) => {
+  console.error("Build failed:", err);
+  process.exit(1);
+});

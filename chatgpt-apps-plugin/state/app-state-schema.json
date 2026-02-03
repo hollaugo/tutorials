@@ -1,0 +1,359 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ChatGPT App Build State",
+  "description": "Schema for tracking ChatGPT App development progress across sessions",
+  "type": "object",
+  "required": ["appName", "phase", "createdAt"],
+  "properties": {
+    "appName": {
+      "type": "string",
+      "description": "Name of the ChatGPT App being built",
+      "minLength": 1
+    },
+    "appDescription": {
+      "type": "string",
+      "description": "One-line description of what the app does"
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["concept", "design", "implementation", "testing", "deployment", "complete"],
+      "description": "Current phase of app development"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "concept": {
+      "type": "object",
+      "description": "Conceptualization phase data",
+      "properties": {
+        "valueProposition": {
+          "type": "object",
+          "properties": {
+            "conversationalLeverage": {
+              "type": "object",
+              "properties": {
+                "rating": { "type": "string", "enum": ["high", "medium", "low"] },
+                "explanation": { "type": "string" }
+              }
+            },
+            "nativeFit": {
+              "type": "object",
+              "properties": {
+                "rating": { "type": "string", "enum": ["high", "medium", "low"] },
+                "explanation": { "type": "string" }
+              }
+            },
+            "composability": {
+              "type": "object",
+              "properties": {
+                "rating": { "type": "string", "enum": ["high", "medium", "low"] },
+                "explanation": { "type": "string" }
+              }
+            }
+          }
+        },
+        "useCases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "description"],
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "userStory": { "type": "string" },
+              "trigger": { "type": "string" },
+              "toolsInvolved": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "antiPatternsChecked": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Anti-patterns that were checked and avoided"
+        },
+        "antiPatternsFound": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern": { "type": "string" },
+              "resolution": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "status"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tool identifier (kebab-case)"
+          },
+          "description": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["query", "mutation", "destructive", "widget", "external"]
+          },
+          "annotations": {
+            "type": "object",
+            "properties": {
+              "readOnlyHint": { "type": "boolean" },
+              "destructiveHint": { "type": "boolean" },
+              "openWorldHint": { "type": "boolean" },
+              "idempotentHint": { "type": "boolean" }
+            }
+          },
+          "inputSchema": {
+            "type": "object",
+            "description": "JSON Schema for tool inputs"
+          },
+          "outputSchema": {
+            "type": "object",
+            "description": "JSON Schema for structured output"
+          },
+          "widgetRef": {
+            "type": "string",
+            "description": "Reference to widget resource (for widget tools)"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["planned", "generated", "tested", "validated"]
+          },
+          "filePath": {
+            "type": "string",
+            "description": "Path to generated tool handler file"
+          }
+        }
+      }
+    },
+
+    "widgets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "pattern", "status"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Widget identifier (kebab-case)"
+          },
+          "description": { "type": "string" },
+          "pattern": {
+            "type": "string",
+            "enum": ["list", "detail", "form", "carousel", "fullscreen", "custom"]
+          },
+          "displayMode": {
+            "type": "string",
+            "enum": ["inline", "fullscreen", "pip"]
+          },
+          "toolRef": {
+            "type": "string",
+            "description": "Tool that renders this widget"
+          },
+          "dataShape": {
+            "type": "object",
+            "description": "TypeScript interface shape for widget data"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["planned", "generated", "tested", "validated"]
+          },
+          "filePath": {
+            "type": "string",
+            "description": "Path to generated component file"
+          }
+        }
+      }
+    },
+
+    "auth": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "provider": {
+          "type": "string",
+          "enum": ["none", "auth0", "supabase"]
+        },
+        "configured": { "type": "boolean", "default": false },
+        "scopes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "envVarsSet": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of auth-related env vars that are configured"
+        }
+      }
+    },
+
+    "database": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "provider": {
+          "type": "string",
+          "enum": ["none", "supabase"]
+        },
+        "configured": { "type": "boolean", "default": false },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "tableName"],
+            "properties": {
+              "name": { "type": "string" },
+              "tableName": { "type": "string" },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "type": { "type": "string" },
+                    "nullable": { "type": "boolean" },
+                    "default": { "type": "string" }
+                  }
+                }
+              },
+              "indexes": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "migrationFile": { "type": "string" },
+              "migrationStatus": {
+                "type": "string",
+                "enum": ["pending", "generated", "applied"]
+              }
+            }
+          }
+        },
+        "connectionStringSet": { "type": "boolean", "default": false }
+      }
+    },
+
+    "goldenPrompts": {
+      "type": "object",
+      "properties": {
+        "generated": { "type": "boolean", "default": false },
+        "direct": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "indirect": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "negative": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "validation": {
+      "type": "object",
+      "properties": {
+        "lastRun": { "type": "string", "format": "date-time" },
+        "passed": { "type": "boolean" },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "check": { "type": "string" },
+              "passed": { "type": "boolean" },
+              "message": { "type": "string" },
+              "details": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+
+    "testing": {
+      "type": "object",
+      "properties": {
+        "lastRun": { "type": "string", "format": "date-time" },
+        "passed": { "type": "boolean" },
+        "mcpInspectorResults": {
+          "type": "object",
+          "properties": {
+            "toolDiscovery": { "type": "boolean" },
+            "toolExecution": { "type": "boolean" },
+            "resourceListing": { "type": "boolean" }
+          }
+        },
+        "goldenPromptResults": {
+          "type": "object",
+          "properties": {
+            "directPassed": { "type": "integer" },
+            "directTotal": { "type": "integer" },
+            "indirectPassed": { "type": "integer" },
+            "indirectTotal": { "type": "integer" }
+          }
+        }
+      }
+    },
+
+    "deployment": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": ["none", "render"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["not_started", "configured", "deploying", "deployed", "verified", "failed"]
+        },
+        "serviceName": { "type": "string" },
+        "serviceUrl": { "type": "string", "format": "uri" },
+        "mcpEndpoint": { "type": "string", "format": "uri" },
+        "databaseName": { "type": "string" },
+        "lastDeployedAt": { "type": "string", "format": "date-time" },
+        "deploymentErrors": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+
+    "files": {
+      "type": "object",
+      "description": "Track generated files",
+      "properties": {
+        "server": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "widgets": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "migrations": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "config": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

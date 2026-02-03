@@ -1,0 +1,101 @@
+#!/bin/bash
+#
+# {{appName}} - Start Server
+#
+# The server uses dotenv to load .env and .env.local automatically.
+# No need to source environment files in this script.
+#
+# Usage:
+#   ./START.sh              # HTTP mode (for ChatGPT connector)
+#   ./START.sh --stdio      # Stdio mode (for MCP Inspector)
+#   ./START.sh --inspector  # Alias for --stdio
+#   ./START.sh --dev        # Development mode with hot reload
+#
+set -euo pipefail
+
+cd "$(dirname "$0")"
+
+# =============================================================================
+# Check Setup
+# =============================================================================
+
+if [ ! -f .env ]; then
+  echo "❌ No .env file found."
+  echo "   Run ./setup.sh first to configure the environment."
+  exit 1
+fi
+
+if [ ! -d node_modules ]; then
+  echo "❌ Dependencies not installed."
+  echo "   Run ./setup.sh or npm install first."
+  exit 1
+fi
+
+# =============================================================================
+# Start Server
+# =============================================================================
+
+MODE="${1:-}"
+
+case "$MODE" in
+  --stdio|--inspector)
+    echo "🔍 Starting in stdio mode for MCP Inspector..."
+
+    # Build if needed
+    if [ ! -f dist/server/index.js ]; then
+      echo "📦 Building server..."
+      npm run build:server
+    fi
+
+    # Run without HTTP_MODE (dotenv loads .env where HTTP_MODE=false)
+    node dist/server/index.js --stdio
+    ;;
+
+  --dev)
+    echo "🔧 Starting in development mode..."
+
+    # Build widgets first (tsx doesn't handle Vite)
+    if [ ! -d dist/web ] && [ -d web ]; then
+      echo "📦 Building widgets..."
+      npm run build:web 2>/dev/null || true
+    fi
+
+    # tsx handles TypeScript directly, dotenv loads env
+    HTTP_MODE=true npm run dev
+    ;;
+
+  --http|"")
+    # Default: HTTP mode for ChatGPT connector
+
+    # Build if needed
+    if [ ! -f dist/server/index.js ]; then
+      echo "📦 Building server..."
+      npm run build:server
+    fi
+
+    if [ ! -d dist/web ] && [ -d web ]; then
+      echo "📦 Building widgets..."
+      npm run build:web 2>/dev/null || true
+    fi
+
+    echo ""
+    echo "============================================================"
+    echo "🚀 Starting {{appName}}"
+    echo "============================================================"
+    echo ""
+
+    # Set HTTP_MODE for this run (overrides .env)
+    HTTP_MODE=true node dist/server/index.js
+    ;;
+
+  *)
+    echo "Usage: ./START.sh [--http|--stdio|--inspector|--dev]"
+    echo ""
+    echo "Options:"
+    echo "  --http       HTTP mode for ChatGPT connector (default)"
+    echo "  --stdio      Stdio mode for MCP Inspector"
+    echo "  --inspector  Alias for --stdio"
+    echo "  --dev        Development mode with hot reload"
+    exit 1
+    ;;
+esac
