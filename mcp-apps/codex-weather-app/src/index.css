@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --surface-glass: rgba(255, 255, 255, 0.82);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(
+    --font-sans,
+    "Space Grotesk",
+    "IBM Plex Sans",
+    "Segoe UI",
+    sans-serif
+  );
+  background: var(--color-background-primary, #f6f3ef);
+  background-image: radial-gradient(
+      1200px circle at top left,
+      rgba(255, 221, 170, 0.35),
+      transparent 55%
+    ),
+    radial-gradient(
+      900px circle at top right,
+      rgba(160, 205, 255, 0.3),
+      transparent 50%
+    ),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.75), transparent 60%);
+  color: var(--color-text-primary, #1a1a1a);
+}
+
+.card {
+  background: var(--surface-glass, rgba(255, 255, 255, 0.85));
+  border: 1px solid var(--color-border-primary, rgba(229, 229, 229, 0.8));
+  border-radius: var(--border-radius-lg, 16px);
+  padding: 1.5rem;
+  box-shadow: 0 20px 45px rgba(18, 24, 40, 0.08);
+  backdrop-filter: blur(8px);
+}
+
+.card-inner {
+  background: var(--color-background-secondary, #f5f5f5);
+  border-radius: var(--border-radius-md, 10px);
+  padding: 1rem;
+}
+
+.text-primary {
+  color: var(--color-text-primary, #1a1a1a);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary, #525252);
+}
+
+.text-tertiary {
+  color: var(--color-text-tertiary, #737373);
+}

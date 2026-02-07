@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: weather-forecast-app
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: HTTP_MODE
+        value: true
+      - key: NODE_ENV
+        value: production
+      # Optional: set to your Render URL when deployed
+      # - key: WIDGET_DOMAIN
+      #   value: https://weather-forecast-app.onrender.com

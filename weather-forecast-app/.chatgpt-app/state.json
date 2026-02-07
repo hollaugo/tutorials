@@ -1,0 +1,21 @@
+{
+  "appName": "weather-forecast-app",
+  "phase": "implementation",
+  "tools": [
+    {
+      "name": "get_weather_forecast",
+      "description": "Get the current conditions and multi-day forecast for a location."
+    }
+  ],
+  "widgets": [
+    {
+      "id": "weather-card",
+      "name": "Weather Forecast"
+    }
+  ],
+  "auth": { "enabled": false },
+  "deployment": {
+    "platform": "render",
+    "status": "not-deployed"
+  }
+}
