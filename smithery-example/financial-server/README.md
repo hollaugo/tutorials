@@ -1,4 +1,5 @@
 # Financial Research MCP Server
+[![smithery badge](https://smithery.ai/badge/@hollaugo/tutorials)](https://smithery.ai/server/@hollaugo/tutorials)
 
 A comprehensive Model Context Protocol (MCP) server for financial research and analysis, built with FastMCP and deployed on Smithery.
 
@@ -24,6 +25,14 @@ The server supports session-specific configuration:
 - `user_agent`: Custom user agent string for SEC requests (default: "Prompt Circle Labs info@promptcircle.com")
 
 ## Usage
+
+### Installing via Smithery
+
+To install Financial Research MCP Server automatically via [Smithery](https://smithery.ai/server/@hollaugo/tutorials):
+
+```bash
+npx -y @smithery/cli install @hollaugo/tutorials
+```
 
 ### Local Development
 
