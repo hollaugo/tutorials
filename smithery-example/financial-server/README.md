@@ -1,5 +1,7 @@
 # Financial Research MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@hollaugo/financial-research-mcp)](https://smithery.ai/server/@hollaugo/financial-research-mcp)
+
 A comprehensive Model Context Protocol (MCP) server for financial research and analysis, built with FastMCP and deployed on Smithery.
 
 ## Features
